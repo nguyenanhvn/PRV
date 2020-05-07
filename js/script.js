@@ -33,23 +33,33 @@ jQuery(document).ready(function() {
 	// 	header();
 	// });
 
-	jQuery("#header").sticky({ 
-		topSpacing: 0,
-		bottomSpacing: jQuery('#footer').height() + 60,
-		getWidthFrom: '50'
-	});
+	if(jQuery('.tab__online__scroll').length > 0){
+		jQuery('.tab__online__scroll').mCustomScrollbar();		
+	}
 
-	jQuery(".content-application .box__right .box__right__sticky").sticky({ 
-		topSpacing: 79,
-		bottomSpacing: jQuery('#footer').innerHeight() + 130,
-		getWidthFrom: '0'
-	});
+	if(jQuery(window).width() > 1030){
+		jQuery("#header").sticky({ 
+			topSpacing: 0,
+			bottomSpacing: jQuery('#footer').height() + 60,
+			getWidthFrom: '50'
+		});
+	}
 
-	jQuery(".content__siderbar__sticky").sticky({ 
-		topSpacing: 79,
-		bottomSpacing: jQuery('#footer').innerHeight() + jQuery('section.news').innerHeight() + 160,
-		getWidthFrom: '0'
-	});
+	if(jQuery(window).width() > 992){	
+		jQuery(".content-application .box__right .box__right__sticky").sticky({ 
+			topSpacing: 79,
+			bottomSpacing: jQuery('#footer').innerHeight() + 130,
+			getWidthFrom: '0'
+		});
+	}
+
+	if(jQuery(window).width() > 767){	
+		jQuery(".content__siderbar__sticky").sticky({ 
+			topSpacing: 79,
+			bottomSpacing: jQuery('#footer').innerHeight() + jQuery('section.news').innerHeight() + jQuery('section.content-next').innerHeight() + 160,
+			getWidthFrom: '0'
+		});
+	}
 
 	jQuery(window).resize(function(event) {
 		jQuery("#header").sticky('update');
@@ -78,7 +88,7 @@ jQuery(document).ready(function() {
 		if(jQuery(window).width() > 767){	
 			jQuery(".content__siderbar__sticky").sticky({ 
 				topSpacing: 79,
-				bottomSpacing: jQuery('#footer').innerHeight() + jQuery('section.news').innerHeight() + 160,
+				bottomSpacing: jQuery('#footer').innerHeight() + jQuery('section.news').innerHeight() + jQuery('section.content-next').innerHeight() + 160,
 				getWidthFrom: '0'
 			});
 		} else {	    	
@@ -311,6 +321,23 @@ jQuery(document).ready(function() {
 		  	items: 1,
 		});
 	}
+    if(jQuery('.review__slider').length > 0){
+		jQuery('.review__slider').owlCarousel({
+		    loop:true,
+		    margin: 10,
+		    autoplayTimeout:7000,
+		    nav: false,
+		    autoplay: true,
+		    rewind: true,
+		    dots: false,
+	        lazyLoad:true,
+			autoplayHoverPause:true,
+		  	autoplaySpeed: 700,
+		  	navSpeed: 700,
+		  	dragEndSpeed: 700,
+		  	items: 3,
+		});
+	}
     if(jQuery('.history__slider').length > 0){
 		jQuery('.history__slider').owlCarousel({
 		    loop:true,
@@ -432,6 +459,65 @@ jQuery(document).ready(function() {
 			]
 		});
 	}
+
+	// Reviews
+	var sync2 = $('.content-reviews .review__avatar__slider'),
+        sync1 = $('.content-reviews .review__info__slider'),
+        duration = 300,
+        thumbs = 4;
+
+    // Sync nav
+    sync1.on('click', '.owl-next', function () {
+        sync2.trigger('next.owl.carousel')
+    });
+    sync1.on('click', '.owl-prev', function () {
+        sync2.trigger('prev.owl.carousel')
+    });
+
+    // Start Carousel
+    sync1.owlCarousel({
+        // rtl: true,
+        // center: true,
+        loop: true,
+        items: 1,
+        margin: 0,
+        smartSpeed: 700,
+        lazyLoad: true,
+        autoplay: false,
+        autoplayTimeout: 5000,
+        autoplayHoverPause: true,
+        nav: true,
+        mouseDrag: false,
+        touchDrag: false,
+	  	navText: ['<div class="slider__prev"></div>','<div class="slider__next"></div>'],
+    }).on('dragged.owl.carousel', function (e) {
+        if (e.relatedTarget.state.direction == 'left') {
+            sync2.trigger('next.owl.carousel')
+        } else {
+            sync2.trigger('prev.owl.carousel')
+        }
+    });
+
+
+    sync2.owlCarousel({
+        // rtl: true,
+        loop: true,
+        items: thumbs,
+        margin: 85,
+        autoplay: true,
+        autoplayTimeout: 5000,
+        autoplayHoverPause: true,
+        smartSpeed: 700,
+        nav: false,
+        mouseDrag: false,
+        touchDrag: false,
+        center: true,
+        autoWidth: true,
+    }).on('click', '.owl-item', function () {
+        var i = $(this).index() - (thumbs + 1);
+        sync2.trigger('to.owl.carousel', [i, duration, true]);
+        sync1.trigger('to.owl.carousel', [i, duration, true]);
+    });
 
     jQuery(document).on('click', '.nav-mobile .nav-tabs li a', function(event) {
     	event.preventDefault();
